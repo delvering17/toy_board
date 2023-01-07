@@ -1,16 +1,12 @@
 package com.delver.board.domain.member;
 
 import com.delver.board.web.controller.dto.MemberSaveRequestDto;
-import lombok.RequiredArgsConstructor;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
-@RequiredArgsConstructor
 @SpringBootTest
 class MemberRepositoryTest {
 
