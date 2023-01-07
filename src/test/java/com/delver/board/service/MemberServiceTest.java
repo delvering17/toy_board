@@ -1,4 +1,4 @@
-package com.delver.board.domain.service;
+package com.delver.board.service;
 
 import com.delver.board.domain.member.JoinRoot;
 import com.delver.board.domain.member.Member;
