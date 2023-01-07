@@ -3,6 +3,7 @@ package com.delver.board.domain.post;
 import com.delver.board.domain.member.JoinRoot;
 import com.delver.board.domain.member.Member;
 import com.delver.board.domain.member.Role;
+import com.delver.board.domain.post.Post;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,7 @@ class PostTest {
                 .email("delvering17@gmail.com")
                 .picture("picture")
                 .role(Role.USER)
-                .joinRoot(JoinRoot.LOCAL)
+                .joinRoot(JoinRoot.GOOGLE)
                 .build();
     }
 
