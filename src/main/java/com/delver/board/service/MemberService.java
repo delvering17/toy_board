@@ -5,6 +5,7 @@ import com.delver.board.domain.member.MemberRepository;
 import com.delver.board.web.controller.dto.MemberSaveRequestDto;
 import com.delver.board.web.controller.dto.MemberUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,19 @@ public class MemberService {
 
         if (member == null) {
             throw new IllegalStateException("회원 정보가 없습니다.");
+        }
+
+        return member;
+    }
+
+    @Transactional(readOnly = true)
+    public Member findByUserName(String userName) {
+        Member member;
+        try {
+             member = memberRepository.findByUserName(userName);
+
+        } catch (EmptyResultDataAccessException e) {
+            throw new IllegalStateException("회원 정보가 없습니다.", e);
         }
 
         return member;
