@@ -12,8 +12,20 @@ class MemberTest {
     public void member_username_비어있으면_exception() throws Exception {
         assertThatThrownBy(() -> Member.createMember()
                 .userName("")
+                .password("password")
                 .email("delvering17@gmail.com")
-                .picture("picture")
+                .role(Role.USER)
+                .joinRoot(JoinRoot.LOCAL)
+                .build())
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    public void member_password_비어있으면_exception() throws Exception {
+        assertThatThrownBy(() -> Member.createMember()
+                .userName("delver")
+                .password("")
+                .email("delvering17@gmail.com")
                 .role(Role.USER)
                 .joinRoot(JoinRoot.LOCAL)
                 .build())
@@ -23,30 +35,20 @@ class MemberTest {
     public void member_email_비어있으면_exception() throws Exception {
         assertThatThrownBy(() -> Member.createMember()
                 .userName("delver")
+                .password("password")
                 .email("")
-                .picture("picture")
                 .role(Role.USER)
                 .joinRoot(JoinRoot.LOCAL)
                 .build())
                 .isInstanceOf(IllegalArgumentException.class);
     }
-    @Test
-    public void member_picture_비어있으면_exception() throws Exception {
-        assertThatThrownBy(() -> Member.createMember()
-                .userName("delver")
-                .email("delvering17@gmail.com")
-                .picture("")
-                .role(Role.USER)
-                .joinRoot(JoinRoot.LOCAL)
-                .build())
-                .isInstanceOf(IllegalArgumentException.class);
-    }
+
     @Test
     public void member_role_비어있으면_exception() throws Exception {
         assertThatThrownBy(() -> Member.createMember()
                 .userName("delver")
+                .password("password")
                 .email("delvering17@gmail.com")
-                .picture("picture")
                 .role(null)
                 .joinRoot(JoinRoot.LOCAL)
                 .build())
@@ -56,8 +58,8 @@ class MemberTest {
     public void member_joinRoot_비어있으면_exception() throws Exception {
         assertThatThrownBy(() -> Member.createMember()
                 .userName("delver")
+                .password("password")
                 .email("delvering17@gmail.com")
-                .picture("picture")
                 .role(Role.USER)
                 .joinRoot(null)
                 .build())
@@ -68,15 +70,15 @@ class MemberTest {
     public void createMember() throws Exception {
         Member member = Member.createMember()
                 .userName("delver")
+                .password("password")
                 .email("delvering17@gmail.com")
-                .picture("picture")
                 .role(Role.USER)
                 .joinRoot(JoinRoot.LOCAL)
                 .build();
 
         assertThat(member.getUserName()).isEqualTo("delver");
+        assertThat(member.getPassword()).isEqualTo("password");
         assertThat(member.getEmail()).isEqualTo("delvering17@gmail.com");
-        assertThat(member.getPicture()).isEqualTo("picture");
         assertThat(member.getRole()).isEqualTo(Role.USER);
         assertThat(member.getJoinRoot()).isEqualTo(JoinRoot.LOCAL);
     }
@@ -86,17 +88,17 @@ class MemberTest {
         // given
         Member member = Member.createMember()
                 .userName("delver")
+                .password("password")
                 .email("delvering17@gmail.com")
-                .picture("picture")
                 .role(Role.USER)
                 .joinRoot(JoinRoot.LOCAL)
                 .build();
         // when
-        member.update("newMember", "dog@cat.com", "cat");
+        member.update("newMember", "newPassword", "dog@cat.com");
 
         // then
         assertThat(member.getUserName()).isEqualTo("newMember");
+        assertThat(member.getPassword()).isEqualTo("newPassword");
         assertThat(member.getEmail()).isEqualTo("dog@cat.com");
-        assertThat(member.getPicture()).isEqualTo("cat");
     }
 }

@@ -17,10 +17,11 @@ class MemberRepositoryTest {
     @Test
     public void save() throws Exception {
         // given
-        MemberSaveRequestDto dto = MemberSaveRequestDto.builder()
+        MemberSaveRequestDto dto = MemberSaveRequestDto.createLocalMember()
                 .userName("delver")
+                .password("password")
+                .passwordConfirm("password")
                 .email("delvering17@gmail.com")
-                .picture("picture")
                 .role(Role.USER)
                 .joinRoot(JoinRoot.LOCAL)
                 .build();
@@ -29,7 +30,7 @@ class MemberRepositoryTest {
         memberRepository.save(member);
 
         // then
-        Member findMember = memberRepository.findById(1L);
+        Member findMember = memberRepository.findById(member.getId());
         assertThat(member).isEqualTo(findMember);
 
     }
