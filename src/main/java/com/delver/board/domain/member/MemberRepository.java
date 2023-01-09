@@ -15,9 +15,11 @@ import java.util.List;
 public class MemberRepository {
 
     private final EntityManager em;
-    public void save(Member member) {
+    public Long save(Member member) {
         em.persist(member);
         log.info("member.id={}", member.getId());
+
+        return member.getId();
     }
 
     public Member findById(Long memberId) {

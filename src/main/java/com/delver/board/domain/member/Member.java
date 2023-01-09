@@ -22,11 +22,10 @@ public class Member {
     @Column(nullable = false)
     private String userName;
 
-    @Column(nullable = false)
-    private String email;
+    private String password;
 
     @Column(nullable = false)
-    private String picture;
+    private String email;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -47,16 +46,15 @@ public class Member {
      * 생성 매서드
      */
     @Builder(builderClassName = "createMember", builderMethodName = "createMember")
-    public Member(String userName, String email, String picture, Role role, JoinRoot joinRoot) {
+    public Member(String userName, String password, String email, Role role, JoinRoot joinRoot) {
         Assert.hasText(userName, "이름이 없습니다.");
+        Assert.hasText(password, "비밀번호가 없습니다.");
         Assert.hasText(email, "이메일이 없습니다.");
-        Assert.hasText(picture, "사진이 없습니다.");
         Assert.notNull(role, "신분이 없습니다.");
         Assert.notNull(joinRoot, "가입 경로가 없습니다.");
-
         this.userName = userName;
+        this.password = password;
         this.email = email;
-        this.picture = picture;
         this.role = role;
         this.joinRoot = joinRoot;
         joinDate = LocalDateTime.now();
@@ -64,10 +62,10 @@ public class Member {
     /**
      * 비즈니스 로직
      */
-    public void update(String userName, String email, String picture) {
+    public void update(String userName, String password, String email) {
         this.userName = userName;
+        this.password = password;
         this.email = email;
-        this.picture = picture;
     }
 
 

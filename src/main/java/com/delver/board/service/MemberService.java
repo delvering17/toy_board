@@ -18,16 +18,21 @@ public class MemberService {
 
     @Transactional
     public void save(MemberSaveRequestDto dto) {
+
+        checkPasswordAndPasswordConfirm(dto.getPassword(), dto.getPasswordConfirm());
+
         Member member = dto.toEntity();
         memberRepository.save(member);
     }
+
+
 
     @Transactional(readOnly = true)
     public Member findById(Long memberId) {
         Member member = memberRepository.findById(memberId);
 
         if (member == null) {
-            throw new IllegalStateException("회원 정보가 없습니다.");
+            throw new IllegalArgumentException("회원 정보가 없습니다.");
         }
 
         return member;
@@ -40,7 +45,7 @@ public class MemberService {
              member = memberRepository.findByUserName(userName);
 
         } catch (EmptyResultDataAccessException e) {
-            throw new IllegalStateException("회원 정보가 없습니다.", e);
+            throw new IllegalArgumentException("회원 정보가 없습니다.", e);
         }
 
         return member;
@@ -48,8 +53,19 @@ public class MemberService {
 
     @Transactional
     public void updateMember(Long memberId, MemberUpdateRequestDto dto) {
+
+        checkPasswordAndPasswordConfirm(dto.getPassword(), dto.getPasswordConfirm());
+
         Member member = memberRepository.findById(memberId);
-        member.update(dto.getUserName(), dto.getEmail(), dto.getPicture());
+
+        member.update(dto.getUserName(), dto.getPassword(), dto.getEmail());
+    }
+
+    private void checkPasswordAndPasswordConfirm(String password, String passwordConfirm) {
+
+        if (!password.equals(passwordConfirm)) {
+            throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않습니다");
+        }
     }
 
 }

@@ -10,25 +10,29 @@ import lombok.*;
 public class MemberSaveRequestDto {
 
     private String userName;
+
+    private String password;
+    private String passwordConfirm;
     private String email;
-    private String picture;
     private Role role;
+
     private JoinRoot joinRoot;
 
-    @Builder
-    public MemberSaveRequestDto(String userName, String email, String picture, Role role, JoinRoot joinRoot) {
+    @Builder(builderMethodName = "createLocalMember")
+    public MemberSaveRequestDto(String userName, String password, String passwordConfirm, String email, Role role, JoinRoot joinRoot) {
         this.userName = userName;
+        this.password = password;
+        this.passwordConfirm = passwordConfirm;
         this.email = email;
-        this.picture = picture;
-        this.role = role;
-        this.joinRoot = joinRoot;
+        this.role = Role.USER;
+        this.joinRoot = JoinRoot.LOCAL;
     }
 
     public Member toEntity() {
         return Member.createMember()
                 .userName(userName)
+                .password(password)
                 .email(email)
-                .picture(picture)
                 .role(role)
                 .joinRoot(joinRoot)
                 .build();
