@@ -54,12 +54,14 @@ public class LoginApiController {
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-
     @ExceptionHandler(LoginException.class)
     public ResponseEntity<ExceptionResponse> loginExHandle(LoginException e) {
         log.error("[loginExHandle] ex", e);
         ExceptionResponse exceptionResponse = new ExceptionResponse(e.getLoginExceptionCode());
-        return ResponseEntity.status(exceptionResponse.getStatus()).contentType(MediaType.APPLICATION_JSON).body(exceptionResponse);
+        return ResponseEntity
+                .status(exceptionResponse.getStatus())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(exceptionResponse);
     }
 
 
