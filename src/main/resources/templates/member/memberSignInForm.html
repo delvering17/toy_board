@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/header :: header}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="container">
+    <form action="/member/save" th:object="${memberSignInForm}" method="post">
+        <div class="form-group">
+            <label for="email" th:text="이메일"></label>
+            <input type="text" th:field="*{email}" class="form-control" placeholder="이메일을 입력하세요">
+        </div>
+        <div class="form-group">
+            <label for="userName" th:text="이름"></label>
+            <input type="text" th:field="*{userName}" class="form-control" placeholder="이름을 입력하세요">
+        </div>
+        <div class="form-group">
+            <label for="password" th:text="비밀번호"></label>
+            <input type="password" th:field="*{password}" class="form-control" placeholder="비밀번호를 입력하세요">
+        </div>
+        <div class="form-group">
+            <label for="passwordConfirm" th:text="비밀번호확인"></label>
+            <input type="password" th:field="*{passwordConfirm}" class="form-control" placeholder="비밀번호 확인을 입력하세요">
+        </div>
+        <button type="button" id="btn-signin" class="btn btn-primary">가입</button>
+    </form>
+</div>
+</body>
+
+<footer th:replace="~{fragment/footer :: footer(~{::js})}">
+    <th:block th:fragment="js">
+        <script src="/js/sign-in.js"></script>
+    </th:block>
+</footer>
+</html>
