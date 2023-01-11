@@ -3,20 +3,26 @@ package com.delver.board.web.controller.dto;
 import com.delver.board.domain.member.JoinRoot;
 import com.delver.board.domain.member.Member;
 import com.delver.board.domain.member.Role;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberSaveRequestDto {
 
+    @NotEmpty
     private String userName;
 
+    @NotEmpty
     private String password;
+    @NotEmpty
     private String passwordConfirm;
+    @NotEmpty
     private String email;
-    private Role role;
 
-    private JoinRoot joinRoot;
+    private Role role = Role.USER;
+
+    private JoinRoot joinRoot = JoinRoot.LOCAL;
 
     @Builder(builderMethodName = "createLocalMember")
     public MemberSaveRequestDto(String userName, String password, String passwordConfirm, String email, Role role, JoinRoot joinRoot) {

@@ -2,12 +2,16 @@ package com.delver.board.service;
 
 import com.delver.board.domain.member.Member;
 import com.delver.board.domain.member.MemberRepository;
+import com.delver.board.exception.MemberException;
+import com.delver.board.exception.code.MemberExceptionCode;
 import com.delver.board.web.controller.dto.MemberSaveRequestDto;
 import com.delver.board.web.controller.dto.MemberUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -17,12 +21,15 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void save(MemberSaveRequestDto dto) {
+    public Long save(MemberSaveRequestDto dto) {
 
         checkPasswordAndPasswordConfirm(dto.getPassword(), dto.getPasswordConfirm());
+        checkDuplicateEmail(dto.getEmail());
 
         Member member = dto.toEntity();
-        memberRepository.save(member);
+        Long memberId = memberRepository.save(member);
+
+        return memberId;
     }
 
 
@@ -32,7 +39,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberId);
 
         if (member == null) {
-            throw new IllegalArgumentException("회원 정보가 없습니다.");
+            throw new MemberException(MemberExceptionCode.MEMBER_NOT_FOUND);
         }
 
         return member;
@@ -40,21 +47,14 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public Member findByUserName(String userName) {
-        Member member;
-        try {
-             member = memberRepository.findByUserName(userName);
-
-        } catch (EmptyResultDataAccessException e) {
-            throw new IllegalArgumentException("회원 정보가 없습니다.", e);
-        }
+        Member member = memberRepository.findByUserName(userName)
+                .orElseThrow(() -> new MemberException(MemberExceptionCode.MEMBER_NOT_FOUND));
 
         return member;
     }
 
     @Transactional
     public void updateMember(Long memberId, MemberUpdateRequestDto dto) {
-
-        checkPasswordAndPasswordConfirm(dto.getPassword(), dto.getPasswordConfirm());
 
         Member member = memberRepository.findById(memberId);
 
@@ -64,8 +64,17 @@ public class MemberService {
     private void checkPasswordAndPasswordConfirm(String password, String passwordConfirm) {
 
         if (!password.equals(passwordConfirm)) {
-            throw new IllegalArgumentException("비밀번호와 비밀번호 확인이 일치하지 않습니다");
+            throw new MemberException(MemberExceptionCode.MEMBER_INCONSISTENCY_PASSWORDCONFIRM);
         }
     }
+
+    private void checkDuplicateEmail(String email) {
+        memberRepository.findByLoginEmail(email)
+                .ifPresent(m -> {
+                    throw new MemberException(MemberExceptionCode.MEMBER_DUPLICATE_EMAIL);
+
+                });
+    }
+
 
 }

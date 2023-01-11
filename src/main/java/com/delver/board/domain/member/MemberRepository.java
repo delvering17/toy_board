@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -26,11 +27,19 @@ public class MemberRepository {
         return em.find(Member.class, memberId);
     }
 
-    public Member findByUserName(String userName) {
+    public Optional<Member> findByUserName(String userName) {
         String sql = "select m from Member m where m.userName = :userName";
-        Member member = em.createQuery(sql, Member.class)
+        Optional<Member> member = em.createQuery(sql, Member.class)
                 .setParameter("userName", userName)
-                .getSingleResult();
+                .getResultStream().findFirst();
+        return member;
+    }
+
+    public Optional<Member> findByLoginEmail(String email) {
+        String sql = "select m from Member m where m.email = :email";
+        Optional<Member> member = em.createQuery(sql, Member.class)
+                .setParameter("email", email)
+                .getResultStream().findFirst();
         return member;
     }
 }
