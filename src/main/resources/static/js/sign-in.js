@@ -1,25 +1,26 @@
-const login = {
+const signIn = {
     init: function () {
         const _this = this;
-        $('#btn-login').on('click', function () {
-            _this.login();
+        $('#btn-signin').on('click', function () {
+            _this.signin();
         });
-
     },
-    login: function () {
-        const data = {
+    signin: function () {
+        const data =  {
             email: $('#email').val(),
-            password: $('#password').val()
+            userName: $('#userName').val(),
+            password: $('#password').val(),
+            passwordConfirm: $('#passwordConfirm').val()
         };
 
         $.ajax({
             type: 'POST',
-            url: "/api/login",
+            url: "/api/member/save",
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(data)
+            data:JSON.stringify(data)
         }).done(function () {
-            alert('로그인 되었습니다.');
+            alert('회원가입 되었습니다.');
             window.location.href = '/';
         }).fail(function (response) {
             console.log(response);
@@ -31,9 +32,9 @@ const login = {
                 alert(response.responseJSON.message);
             }
         })
-
     }
 
-};
 
-login.init();
+}
+
+signIn.init();
