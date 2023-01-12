@@ -26,7 +26,8 @@ const signIn = {
             console.log(response);
             if (response.status === 400 && response.responseJSON.errorDetails != null) {
                 $.each(response.responseJSON.errorDetails, function (index, errorDetails) {
-                    $('input[id=' + errorDetails.field + ']').after('<span class="error">' + errorDetails.message + '</span>');
+                    let errorSpan =  document.querySelector(".error-" + errorDetails.field);
+                    errorSpan.textContent = errorDetails.message;
                 });
             } else {
                 alert(response.responseJSON.message);
