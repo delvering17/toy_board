@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragment/header :: header}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="container">
+    <th:block th:object="${post}">
+        <label th:text="*{category}">카테고리</label>
+        <h2 th:text="*{title}">제목</h2>
+        <br>
+        <textarea type="text" th:text="*{content}" readonly>내용</textarea>
+
+
+    </th:block>
+</div>
+
+<!-- 수정 삭제 버튼-->
+
+
+</body>
+
+<footer th:replace="~{fragment/footer :: footer(~{::js})}">
+    <th:block th:fragment="js">
+
+    </th:block>
+</footer>
+
+</html>

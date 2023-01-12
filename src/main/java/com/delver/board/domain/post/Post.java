@@ -24,7 +24,7 @@ public class Post {
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
     @Column(nullable = false)
@@ -56,6 +56,15 @@ public class Post {
         this.category = category;
         this.createDate = LocalDateTime.now();
     }
+    /**
+     * 비즈니스 로직
+     */
+    public void update(String title, String content, String category) {
+        this.title = title;
+        this.content = content;
+        this.category = category;
+    }
+
 
 
 

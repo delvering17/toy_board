@@ -4,6 +4,8 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Repository
 public class PostRepository {
@@ -15,8 +17,13 @@ public class PostRepository {
         return post.getId();
     }
 
-    public Post findById(Long post_id) {
-        return em.find(Post.class, post_id);
+    public Post findById(Long postId) {
+        return em.find(Post.class, postId);
+    }
+
+    public List<Post> findAll() {
+        return em.createQuery("select p from Post p", Post.class)
+                .getResultList();
     }
 
     public void delete(Post post) {

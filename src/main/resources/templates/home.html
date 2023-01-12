@@ -34,12 +34,20 @@
         <tbody>
         <tr th:each="post : ${postList}">
             <td th:text="${post.category}">카테고리</td>
-            <td th:text="${post.title}">제목</td>
+            <td>
+                <a th:href="|/post/${post.id}|" th:text="${post.title}">제목</a>
+            </td>
             <td th:text="${post.member.userName}">작성자</td>
             <td th:text="${post.createDate}">게시일</td>
         </tr>
         </tbody>
     </table>
+</div>
+
+<br/>
+
+<div class="container">
+    <a href="/post/save" class="btn btn-primary" role="button">글 등록</a>
 </div>
 
 </body>
