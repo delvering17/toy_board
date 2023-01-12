@@ -9,6 +9,7 @@ import com.delver.board.domain.post.PostRepository;
 import com.delver.board.service.MemberService;
 import com.delver.board.web.controller.dto.MemberSaveRequestDto;
 import com.delver.board.web.controller.dto.PostSaveRequestDto;
+import com.delver.board.web.controller.dto.PostUpdateRequestDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -80,6 +81,58 @@ public class PostApiControllerTest {
         List<Post> posts = postRepository.findAll();
         assertThat(posts.size()).isEqualTo(1);
 
+    }
+
+    @Test
+    public void 게시글_수정() throws Exception {
+        // given
+        PostSaveRequestDto saveDto = PostSaveRequestDto.builder()
+                .title("제목")
+                .content("내용")
+                .category("카테고리")
+                .build();
+        Long postId = postRepository.save(saveDto.toEntity(member));
+
+        PostUpdateRequestDto updateDto = PostUpdateRequestDto.builder()
+                .title("수정된 제목")
+                .content("수정된 내용")
+                .category("수정된 카테고리")
+                .build();
+
+        // when/
+        mvc.perform(post("http://localhost:8080/api/post/" + postId + "/update")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(updateDto))
+                .session(mockSession)
+        ).andExpect(status().isOk());
+
+        // then
+        Post post = postRepository.findById(postId);
+        assertThat(post.getTitle()).isEqualTo(updateDto.getTitle());
+        assertThat(post.getContent()).isEqualTo(updateDto.getContent());
+        assertThat(post.getCategory()).isEqualTo(updateDto.getCategory());
+
+    }
+
+    @Test
+    public void 게시글_삭제() throws Exception {
+        // given
+        PostSaveRequestDto saveDto = PostSaveRequestDto.builder()
+                .title("제목")
+                .content("내용")
+                .category("카테고리")
+                .build();
+        Long postId = postRepository.save(saveDto.toEntity(member));
+
+        // when/
+        mvc.perform(post("http://localhost:8080/api/post/" + postId + "/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(mockSession)
+        ).andExpect(status().isOk());
+
+        // then
+        Post post = postRepository.findById(postId);
+        assertThat(post).isNull();
     }
 
     private Member createMemberAndLogin() throws Exception {
