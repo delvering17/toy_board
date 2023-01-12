@@ -18,7 +18,6 @@ class PostTest {
         member = Member.createMember()
                 .userName("delver")
                 .email("delvering17@gmail.com")
-                .picture("picture")
                 .role(Role.USER)
                 .joinRoot(JoinRoot.GOOGLE)
                 .build();

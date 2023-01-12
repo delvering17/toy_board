@@ -4,12 +4,15 @@ import com.delver.board.domain.member.JoinRoot;
 import com.delver.board.domain.member.Member;
 import com.delver.board.domain.member.Role;
 import com.delver.board.web.controller.dto.MemberSaveRequestDto;
+import com.delver.board.web.controller.dto.PostSaveRequestDto;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -27,13 +30,7 @@ class PostRepositoryTest {
     public void save() throws Exception {
         // given
         Member member = createMember();
-        Post post = PostSaveRequestDto.builder()
-                .title("제목")
-                .content("내용")
-                .member(member)
-                .category("카테고리")
-                .build()
-                .toEntity();
+        Post post = createPostEntity(member);
         // when
         postRepository.save(post);
 
@@ -46,16 +43,28 @@ class PostRepositoryTest {
     }
 
     @Test
+    public void findAll() throws Exception {
+        // given
+        Member member = createMember();
+        for (int i = 0; i < 5; i++) {
+            Post post = createPostEntity(member);
+            postRepository.save(post);
+        }
+
+        // when
+        List<Post> postList = postRepository.findAll();
+
+        // then
+        assertThat(postList.size()).isEqualTo(5);
+
+    }
+
+
+    @Test
     public void delete() throws Exception {
         // given
         Member member = createMember();
-        Post post = PostSaveRequestDto.builder()
-                .title("제목")
-                .content("내용")
-                .member(member)
-                .category("카테고리")
-                .build()
-                .toEntity();
+        Post post = createPostEntity(member);
         postRepository.save(post);
 
         Post findPost = postRepository.findById(post.getId());
@@ -70,10 +79,9 @@ class PostRepositoryTest {
     }
 
     private Member createMember() {
-        MemberSaveRequestDto dto = MemberSaveRequestDto.builder()
+        MemberSaveRequestDto dto = MemberSaveRequestDto.createLocalMember()
                 .userName("delver")
                 .email("delvering17@gmail.com")
-                .picture("picture")
                 .role(Role.USER)
                 .joinRoot(JoinRoot.LOCAL)
                 .build();
@@ -82,5 +90,12 @@ class PostRepositoryTest {
         return member;
     }
 
-
+    private static Post createPostEntity(Member member) {
+        return PostSaveRequestDto.builder()
+                .title("제목")
+                .content("내용")
+                .category("카테고리")
+                .build()
+                .toEntity(member);
+    }
 }

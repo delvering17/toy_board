@@ -4,12 +4,11 @@ import com.delver.board.domain.member.JoinRoot;
 import com.delver.board.domain.member.Member;
 import com.delver.board.domain.member.Role;
 import com.delver.board.domain.post.Post;
-import com.delver.board.domain.post.PostSaveRequestDto;
-import com.delver.board.domain.post.PostUpdateRequestDto;
+import com.delver.board.web.controller.dto.PostSaveRequestDto;
+import com.delver.board.web.controller.dto.PostUpdateRequestDto;
 import com.delver.board.web.controller.dto.MemberSaveRequestDto;
 import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,7 +32,7 @@ class PostServiceTest {
         PostSaveRequestDto dto = createPostSaveRequestDto( "제목", "내용", member, "카테고리");
 
         // when
-        Long post_id = postService.savePost(dto);
+        Long post_id = postService.savePost(dto, member.getId());
 
         // then
         Post findPost = postService.findById(post_id);
@@ -54,7 +53,7 @@ class PostServiceTest {
         Member member = createMember();
         PostSaveRequestDto saveDto = createPostSaveRequestDto("제목", "내용", member, "카테고리");
 
-        Long post_id = postService.savePost(saveDto);
+        Long post_id = postService.savePost(saveDto, member.getId());
         // when
         PostUpdateRequestDto updateDto = createPostUpdateRequestDto("수정된 제목", "수정된 내용", "수정된 카테고리");
         postService.updatePost(post_id, updateDto);
@@ -75,7 +74,8 @@ class PostServiceTest {
         // given
         Member member = createMember();
         PostSaveRequestDto dto = createPostSaveRequestDto("제목", "내용", member, "카테고리");
-        Long post_id = postService.savePost(dto);
+        Long post_id = postService.savePost(dto, member.getId());
+
 
         // when
         postService.deletePost(post_id);
@@ -88,10 +88,11 @@ class PostServiceTest {
 
 
     private Member createMember() {
-        MemberSaveRequestDto dto = MemberSaveRequestDto.builder()
+        MemberSaveRequestDto dto = MemberSaveRequestDto.createLocalMember()
                 .userName("delver")
                 .email("delvering17@gmail.com")
-                .picture("picture")
+                .password("password")
+                .passwordConfirm("password")
                 .role(Role.USER)
                 .joinRoot(JoinRoot.LOCAL)
                 .build();
@@ -104,7 +105,6 @@ class PostServiceTest {
         return PostSaveRequestDto.builder()
                 .title(title)
                 .content(content)
-                .member(member)
                 .category(category)
                 .build();
     }
