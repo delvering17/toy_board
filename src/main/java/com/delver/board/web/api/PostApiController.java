@@ -5,6 +5,7 @@ import com.delver.board.exception.binding.ErrorResult;
 import com.delver.board.service.PostService;
 import com.delver.board.web.SessionConst;
 import com.delver.board.web.controller.dto.PostSaveRequestDto;
+import com.delver.board.web.controller.dto.PostUpdateRequestDto;
 import com.delver.board.web.response.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -29,8 +30,7 @@ public class PostApiController {
     public ResponseEntity save(@RequestBody @Validated PostSaveRequestDto dto, BindingResult bindingResult, HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
-            ErrorResult errorResult = new ErrorResult(bindingResult, messageSource, Locale.getDefault());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
+            return createResponseEntityOfErrorResult(bindingResult);
         }
 
         HttpSession session = request.getSession();
@@ -38,8 +38,39 @@ public class PostApiController {
 
         Long postId = postService.savePost(dto, member.getId());
 
-        Result result = Result.builder().status(HttpStatus.OK).content(String.valueOf(postId)).build();
+        return createResponseEntityOfResult(String.valueOf(postId));
+    }
+
+    @PostMapping("/api/post/{postId}/update")
+    public ResponseEntity update(@PathVariable Long postId,
+                                 @RequestBody @Validated PostUpdateRequestDto dto,
+                                 BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return createResponseEntityOfErrorResult(bindingResult);
+        }
+
+        postService.updatePost(postId, dto);
+
+        return createResponseEntityOfResult(String.valueOf(postId));
+    }
+
+    @PostMapping("/api/post/{postId}/delete")
+    public ResponseEntity delete(@PathVariable Long postId) {
+
+        postService.deletePost(postId);
+
+        return createResponseEntityOfResult("/");
+    }
+
+    private static ResponseEntity<Result> createResponseEntityOfResult(String content) {
+        Result result = Result.builder().status(HttpStatus.OK).content(content).build();
         return ResponseEntity.status(result.getStatus()).body(result);
+    }
+
+    private ResponseEntity<ErrorResult> createResponseEntityOfErrorResult(BindingResult bindingResult) {
+        ErrorResult errorResult = new ErrorResult(bindingResult, messageSource, Locale.getDefault());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResult);
     }
 
 }

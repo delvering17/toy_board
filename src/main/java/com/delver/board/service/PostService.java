@@ -39,14 +39,14 @@ public class PostService {
 
 
     @Transactional
-    public void updatePost(Long post_id, PostUpdateRequestDto dto) {
-        Post findPost = postRepository.findById(post_id);
+    public void updatePost(Long postId, PostUpdateRequestDto dto) {
+        Post findPost = postRepository.findById(postId);
         findPost.update(dto.getTitle(), dto.getContent(), dto.getCategory());
     }
 
     @Transactional
-    public void deletePost(Long post_id) {
-        Post findPost = postRepository.findById(post_id);
+    public void deletePost(Long postId) {
+        Post findPost = postRepository.findById(postId);
         postRepository.delete(findPost);
     }
 

@@ -9,22 +9,28 @@
 <div class="container">
     <th:block th:object="${post}">
         <label th:text="*{category}">카테고리</label>
-        <h2 th:text="*{title}">제목</h2>
-        <br>
-        <textarea type="text" th:text="*{content}" readonly>내용</textarea>
-
-
+        <h1 th:text="*{title}">제목</h1>
+        <br/>
+        <textarea type="text" th:text="*{content}" class="form-control" readonly>내용</textarea>
+        <input type="hidden" th:field="*{id}">
     </th:block>
 </div>
 
-<!-- 수정 삭제 버튼-->
+<br/>
+
+<div class="container">
+    <a th:href="|/post/${postId}/update|" class="btn btn-success" role="button">수정</a>
+    <button id="btn-post-delete"  th:href="|/post/${postId}/delete|" class="btn btn-danger">삭제</button>
+    <a th:href="|/|" class="btn btn-secondary" role="button">목록</a>
+</div>
+
 
 
 </body>
 
 <footer th:replace="~{fragment/footer :: footer(~{::js})}">
     <th:block th:fragment="js">
-
+        <script src="/js/post-delete.js"></script>
     </th:block>
 </footer>
 

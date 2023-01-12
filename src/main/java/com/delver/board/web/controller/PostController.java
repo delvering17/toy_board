@@ -3,6 +3,7 @@ package com.delver.board.web.controller;
 import com.delver.board.domain.post.Post;
 import com.delver.board.web.controller.dto.PostSaveRequestDto;
 import com.delver.board.service.PostService;
+import com.delver.board.web.controller.dto.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,23 @@ public class PostController {
 
         Post post = postService.findById(postId);
         model.addAttribute("post", post);
+        model.addAttribute("postId", postId);
         return "post/postDetail";
+    }
+
+    @GetMapping("/post/{postId}/update")
+    public String update(@PathVariable Long postId, Model model) {
+
+        Post post = postService.findById(postId);
+        PostUpdateRequestDto dto = PostUpdateRequestDto
+                .changeEntityToDto()
+                .post(post)
+                .build();
+
+        model.addAttribute("postUpdateForm", dto);
+        model.addAttribute("postId", postId);
+
+        return "post/postUpdateForm";
     }
 
 
