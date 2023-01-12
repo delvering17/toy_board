@@ -53,6 +53,14 @@ public class MemberService {
         return member;
     }
 
+    @Transactional(readOnly = true)
+    public Member findByEmail(String email) {
+        Member member = memberRepository.findByLoginEmail(email)
+                .orElseThrow(() -> new MemberException(MemberExceptionCode.MEMBER_NOT_FOUND));
+
+        return member;
+    }
+
     @Transactional
     public void updateMember(Long memberId, MemberUpdateRequestDto dto) {
 
