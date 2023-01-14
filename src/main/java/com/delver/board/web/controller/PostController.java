@@ -26,16 +26,17 @@ public class PostController {
     }
 
     @GetMapping("/post/{postId}")
-    public String detail(@PathVariable Long postId, Model model) {
+    public String detail(@PathVariable Long postId, @RequestParam(defaultValue = "1") int page, Model model) {
 
         Post post = postService.findById(postId);
         model.addAttribute("post", post);
         model.addAttribute("postId", postId);
+        model.addAttribute("page", page);
         return "post/postDetail";
     }
 
     @GetMapping("/post/{postId}/update")
-    public String update(@PathVariable Long postId, Model model) {
+    public String update(@PathVariable Long postId, @RequestParam(defaultValue = "1") int page, Model model) {
 
         Post post = postService.findById(postId);
         PostUpdateRequestDto dto = PostUpdateRequestDto
@@ -45,6 +46,7 @@ public class PostController {
 
         model.addAttribute("postUpdateForm", dto);
         model.addAttribute("postId", postId);
+        model.addAttribute("page", page);
 
         return "post/postUpdateForm";
     }

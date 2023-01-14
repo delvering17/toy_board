@@ -19,9 +19,9 @@
 <br/>
 
 <div class="container">
-    <a th:href="|/post/${postId}/update|" class="btn btn-success" role="button">수정</a>
+    <a th:href="|/post/${postId}/update?page=${page}|" class="btn btn-success" role="button">수정</a>
     <button id="btn-post-delete"  th:href="|/post/${postId}/delete|" class="btn btn-danger">삭제</button>
-    <a th:href="|/|" class="btn btn-secondary" role="button">목록</a>
+    <a th:href="|/?page=${page}|" class="btn btn-secondary" role="button">목록</a>
 </div>
 
 

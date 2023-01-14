@@ -4,6 +4,7 @@ import com.delver.board.domain.member.Member;
 import com.delver.board.domain.member.MemberRepository;
 import com.delver.board.domain.post.Post;
 import com.delver.board.domain.post.PostRepository;
+import com.delver.board.web.constant.PostConst;
 import com.delver.board.web.controller.dto.PostSaveRequestDto;
 import com.delver.board.web.controller.dto.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +34,15 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<Post> findAll() {
-        return postRepository.findAll();
+    public List<Post> findPage(int page, int limit) {
+        return postRepository.findPage( (page - 1) * limit, limit);
     }
 
+    @Transactional(readOnly = true)
+    public Long countPage() {
+        Long countPost = postRepository.countPost();
+        return calculateCountPage(countPost);
+    }
 
     @Transactional
     public void updatePost(Long postId, PostUpdateRequestDto dto) {
@@ -48,6 +54,13 @@ public class PostService {
     public void deletePost(Long postId) {
         Post findPost = postRepository.findById(postId);
         postRepository.delete(findPost);
+    }
+
+    private static long calculateCountPage(Long countPost) {
+        if (countPost % PostConst.POST_LIMIT > 0) {
+            return countPost / PostConst.POST_LIMIT + 1;
+        }
+        return countPost / PostConst.POST_LIMIT;
     }
 
 

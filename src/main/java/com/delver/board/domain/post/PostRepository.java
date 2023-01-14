@@ -26,6 +26,18 @@ public class PostRepository {
                 .getResultList();
     }
 
+    public List<Post> findPage(int offset, int limit) {
+        return em.createQuery("select p from Post p order by p.createDate DESC", Post.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public Long countPost() {
+        return em.createQuery("select count(p) from Post p", Long.class)
+                .getSingleResult();
+    }
+
     public void delete(Post post) {
         em.remove(post);
     }

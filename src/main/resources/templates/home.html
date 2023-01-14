@@ -35,7 +35,7 @@
         <tr th:each="post : ${postList}">
             <td th:text="${post.category}">카테고리</td>
             <td>
-                <a th:href="|/post/${post.id}|" th:text="${post.title}">제목</a>
+                <a th:href="|/post/${post.id}?page=${page}|" th:text="${post.title}">제목</a>
             </td>
             <td th:text="${post.member.userName}">작성자</td>
             <td th:text="${post.createDate}">게시일</td>
@@ -43,6 +43,44 @@
         </tbody>
     </table>
 </div>
+<div class="container">
+    <ul class="pagination">
+        <th:block th:switch="${page == 1}">
+            <th:block th:case="true">
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            </th:block>
+            <th:block th:case="false">
+                <li class="page-item"><a class="page-link" th:href="|/?page=${(page-1)}|">Previous</a></li>
+            </th:block>
+        </th:block>
+
+        <th:block th:each="num : ${#numbers.sequence( ((page+9)/ 10 - 1) * 10 + 1 , ((page+9)/ 10 - 1) * 10 + 1 + 9   , 1 )}">
+            <th:block th:switch="${page == num}">
+                <th:block th:case="true">
+                    <li class="page-item active" aria-current="page">
+                        <a class="page-link" th:href="|/?page=${num}|"  th:text="${num}"></a>
+                    </li>
+                </th:block>
+                <th:block th:case="false">
+                    <li class="page-item" th:if="${num <= countPage}">
+                        <a class="page-link" th:href="|/?page=${num}|"  th:text="${num}"></a>
+                    </li>
+                </th:block>
+            </th:block>
+        </th:block>
+
+        <th:block th:switch="${page == countPage}">
+            <th:block th:case="true">
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            </th:block>
+            <th:block th:case="false">
+                <li class="page-item"><a class="page-link" th:href="|/?page=${(page+1)}|">Next</a></li>
+            </th:block>
+        </th:block>
+
+    </ul>
+</div>
+
 
 <br/>
 
@@ -51,4 +89,11 @@
 </div>
 
 </body>
+
+<footer th:replace="~{fragment/footer :: footer(~{::js})}">
+    <th:block th:fragment="js">
+        <script src="/js/page.js"></script>
+    </th:block>
+</footer>
+
 </html>

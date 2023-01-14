@@ -3,7 +3,8 @@ package com.delver.board.web.controller;
 import com.delver.board.domain.member.Member;
 import com.delver.board.domain.post.Post;
 import com.delver.board.service.PostService;
-import com.delver.board.web.SessionConst;
+import com.delver.board.web.constant.PostConst;
+import com.delver.board.web.constant.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -22,11 +24,17 @@ public class HomeController {
     private final PostService postService;
 
     @GetMapping("/")
-    public String home(Model model, HttpServletRequest request) {
+    public String home(@RequestParam(name = "page", defaultValue = "1") int page,
+                       Model model,
+                       HttpServletRequest request) {
 
-        List<Post> postList = postService.findAll();
+        List<Post> postList = postService.findPage(page, PostConst.POST_LIMIT);
+        Long countPage = postService.countPage();
 
         model.addAttribute("postList", postList);
+        model.addAttribute("page", page);
+        model.addAttribute("countPage", countPage);
+        model.addAttribute("postLimit", PostConst.POST_LIMIT);
 
         HttpSession session = request.getSession(false);
         if (session == null) {
