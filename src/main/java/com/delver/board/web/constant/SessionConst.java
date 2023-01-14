@@ -1,4 +1,4 @@
-package com.delver.board.web;
+package com.delver.board.web.constant;
 
 public interface SessionConst {
 

@@ -1,6 +1,5 @@
 package com.delver.board.web.controller;
 
-import com.delver.board.web.SessionConst;
 import com.delver.board.web.controller.dto.LoginRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

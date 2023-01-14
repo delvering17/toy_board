@@ -3,7 +3,7 @@ package com.delver.board.web.api;
 import com.delver.board.domain.member.Member;
 import com.delver.board.exception.binding.ErrorResult;
 import com.delver.board.service.PostService;
-import com.delver.board.web.SessionConst;
+import com.delver.board.web.constant.SessionConst;
 import com.delver.board.web.controller.dto.PostSaveRequestDto;
 import com.delver.board.web.controller.dto.PostUpdateRequestDto;
 import com.delver.board.web.response.Result;

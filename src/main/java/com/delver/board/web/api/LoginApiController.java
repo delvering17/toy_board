@@ -3,10 +3,9 @@ package com.delver.board.web.api;
 import com.delver.board.domain.member.Member;
 import com.delver.board.exception.ExceptionResponse;
 import com.delver.board.exception.LoginException;
-import com.delver.board.exception.binding.ErrorDetail;
 import com.delver.board.exception.binding.ErrorResult;
 import com.delver.board.service.LoginService;
-import com.delver.board.web.SessionConst;
+import com.delver.board.web.constant.SessionConst;
 import com.delver.board.web.controller.dto.LoginRequestDto;
 import com.delver.board.web.response.Result;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,13 +17,11 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
