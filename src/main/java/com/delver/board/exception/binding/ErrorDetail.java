@@ -22,8 +22,6 @@ public class ErrorDetail {
         this.objectName = fieldError.getObjectName();
         this.field = fieldError.getField();
         this.code = fieldError.getCode();
-        String message1 = messageSource.getMessage(fieldError, locale);
-
         this.message = messageSource.getMessage(fieldError, locale);
     }
 }
