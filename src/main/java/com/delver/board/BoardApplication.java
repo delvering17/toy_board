@@ -33,7 +33,7 @@ public class BoardApplication {
 
 }
 
-//@Profile("test")
+@Profile("test")
 @RequiredArgsConstructor
 @Component
 @Slf4j
