@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,8 +48,6 @@ public class PostApiControllerTest {
     private MemberService memberService;
     @Autowired
     private PostRepository postRepository;
-
-
 
     private Member member;
     private MockHttpSession mockSession;
@@ -107,7 +106,7 @@ public class PostApiControllerTest {
         ).andExpect(status().isOk());
 
         // then
-        Post post = postRepository.findById(postId);
+        Post post = postRepository.findById(postId).get();
         assertThat(post.getTitle()).isEqualTo(updateDto.getTitle());
         assertThat(post.getContent()).isEqualTo(updateDto.getContent());
         assertThat(post.getCategory()).isEqualTo(updateDto.getCategory());
@@ -131,7 +130,7 @@ public class PostApiControllerTest {
         ).andExpect(status().isOk());
 
         // then
-        Post post = postRepository.findById(postId);
+        Post post = postRepository.findById(postId).get();
         assertThat(post).isNull();
     }
 

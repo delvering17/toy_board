@@ -3,7 +3,8 @@ package com.delver.board.service;
 import com.delver.board.domain.member.JoinRoot;
 import com.delver.board.domain.member.Member;
 import com.delver.board.domain.member.Role;
-import com.delver.board.domain.post.Post;
+import com.delver.board.exception.PostException;
+import com.delver.board.web.controller.dto.PostResponseDto;
 import com.delver.board.web.controller.dto.PostSaveRequestDto;
 import com.delver.board.web.controller.dto.PostUpdateRequestDto;
 import com.delver.board.web.controller.dto.MemberSaveRequestDto;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.assertj.core.api.Assertions.*;
 
 @Slf4j
+@Transactional
 @SpringBootTest
 class PostServiceTest {
     @Autowired
@@ -24,7 +26,7 @@ class PostServiceTest {
     @Autowired
     private EntityManager em;
 
-    @Transactional
+
     @Test
     public void 게시글_포스트() throws Exception {
         // given
@@ -35,16 +37,13 @@ class PostServiceTest {
         Long post_id = postService.savePost(dto, member.getId());
 
         // then
-        Post findPost = postService.findById(post_id);
+        PostResponseDto findPost = postService.findById(post_id);
         assertThat(findPost.getTitle()).isEqualTo("제목");
         assertThat(findPost.getContent()).isEqualTo("내용");
-        assertThat(findPost.getMember()).isEqualTo(member);
+        assertThat(findPost.getUsername()).isEqualTo(member.getUserName());
         assertThat(findPost.getCategory()).isEqualTo("카테고리");
     }
 
-
-
-    @Transactional
     @Test
     public void 게시글_수정() throws Exception {
         // given
@@ -59,16 +58,15 @@ class PostServiceTest {
         postService.updatePost(post_id, updateDto);
 
         // then
-        Post updatePost = postService.findById(post_id);
+        PostResponseDto dto = postService.findById(post_id);
 
-        assertThat(updatePost.getTitle()).isEqualTo("수정된 제목");
-        assertThat(updatePost.getContent()).isEqualTo("수정된 내용");
-        assertThat(updatePost.getMember()).isEqualTo(member);
-        assertThat(updatePost.getCategory()).isEqualTo("수정된 카테고리");
+        assertThat(dto.getTitle()).isEqualTo("수정된 제목");
+        assertThat(dto.getContent()).isEqualTo("수정된 내용");
+        assertThat(dto.getUsername()).isEqualTo(member.getUserName());
+        assertThat(dto.getCategory()).isEqualTo("수정된 카테고리");
 
     }
 
-    @Transactional
     @Test
     public void 게시글_삭제() throws Exception {
         // given
@@ -81,11 +79,16 @@ class PostServiceTest {
         postService.deletePost(post_id);
 
         // then
-        Post post = postService.findById(post_id);
-        assertThat(post).isNull();
+        assertThatThrownBy(() -> postService.findById(post_id))
+                .isInstanceOf(PostException.class);
 
     }
 
+    @Test
+    public void 해당_게시글이_없으면_excpetion() throws Exception {
+        assertThatThrownBy(() -> postService.findById(2100L))
+                .isInstanceOf(Exception.class);
+    }
 
     private Member createMember() {
         MemberSaveRequestDto dto = MemberSaveRequestDto.createLocalMember()
@@ -116,6 +119,5 @@ class PostServiceTest {
                 .category(category)
                 .build();
     }
-
 
 }

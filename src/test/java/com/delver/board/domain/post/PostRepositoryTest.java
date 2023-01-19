@@ -3,6 +3,7 @@ package com.delver.board.domain.post;
 import com.delver.board.domain.member.JoinRoot;
 import com.delver.board.domain.member.Member;
 import com.delver.board.domain.member.Role;
+import com.delver.board.exception.PostException;
 import com.delver.board.web.constant.PostConst;
 import com.delver.board.web.controller.dto.MemberSaveRequestDto;
 import com.delver.board.web.controller.dto.PostSaveRequestDto;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -37,12 +39,14 @@ class PostRepositoryTest {
         postRepository.save(post);
 
         // then
-        Post findPost = postRepository.findById(post.getId());
+        Post findPost = postRepository.findById(post.getId()).get();
         assertThat(findPost.getTitle()).isEqualTo("제목");
         assertThat(findPost.getContent()).isEqualTo("내용");
         assertThat(findPost.getMember()).isEqualTo(member);
         assertThat(findPost.getCategory()).isEqualTo("카테고리");
     }
+
+
 
     @Test
     public void findAll() throws Exception {
@@ -75,8 +79,8 @@ class PostRepositoryTest {
 
         // then
         assertThat(posts.size()).isEqualTo(10);
-        assertThat(posts.get(0).getTitle()).isEqualTo("제목1");
-        assertThat(posts.get(0).getContent()).isEqualTo("내용1");
+        assertThat(posts.get(0).getTitle()).isEqualTo("제목30");
+        assertThat(posts.get(0).getContent()).isEqualTo("내용30");
 
     }
 
@@ -107,15 +111,14 @@ class PostRepositoryTest {
         Post post = createPostEntity(member);
         postRepository.save(post);
 
-        Post findPost = postRepository.findById(post.getId());
+        Post findPost = postRepository.findById(post.getId()).get();
 
         // when
         postRepository.delete(findPost);
 
         // then
-        Post deletedPost = postRepository.findById(post.getId());
-
-        assertThat(deletedPost).isNull();
+        Post deletePost = postRepository.findById(post.getId()).orElse(null);
+        assertThat(deletePost).isNull();
     }
 
     private Member createMember() {
