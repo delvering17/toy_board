@@ -1,9 +1,9 @@
 package com.delver.board.web.controller;
 
-import com.delver.board.domain.post.Post;
+import com.delver.board.web.controller.dto.PostResponseDto;
 import com.delver.board.web.controller.dto.PostSaveRequestDto;
 import com.delver.board.service.PostService;
-import com.delver.board.web.controller.dto.PostUpdateRequestDto;
+import com.delver.board.web.controller.dto.PostUpdateForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -28,8 +28,8 @@ public class PostController {
     @GetMapping("/post/{postId}")
     public String detail(@PathVariable Long postId, @RequestParam(defaultValue = "1") int page, Model model) {
 
-        Post post = postService.findById(postId);
-        model.addAttribute("post", post);
+        PostResponseDto dto = postService.findById(postId);
+        model.addAttribute("post", dto);
         model.addAttribute("postId", postId);
         model.addAttribute("page", page);
         return "post/postDetail";
@@ -38,13 +38,11 @@ public class PostController {
     @GetMapping("/post/{postId}/update")
     public String update(@PathVariable Long postId, @RequestParam(defaultValue = "1") int page, Model model) {
 
-        Post post = postService.findById(postId);
-        PostUpdateRequestDto dto = PostUpdateRequestDto
-                .changeEntityToDto()
-                .post(post)
+        PostUpdateForm form = PostUpdateForm.builder()
+                .dto(postService.findById(postId))
                 .build();
 
-        model.addAttribute("postUpdateForm", dto);
+        model.addAttribute("postUpdateForm", form);
         model.addAttribute("postId", postId);
         model.addAttribute("page", page);
 

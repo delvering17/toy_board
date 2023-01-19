@@ -7,17 +7,17 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostUpdateRequestDto {
+public class PostUpdateForm {
 
     private String title;
     private String content;
     private String category;
 
     @Builder
-    public PostUpdateRequestDto(String title, String content, String category) {
-        this.title = title;
-        this.content = content;
-        this.category = category;
+    public PostUpdateForm(PostResponseDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.category = dto.getCategory();
     }
 
 }

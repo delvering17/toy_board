@@ -4,7 +4,10 @@ import com.delver.board.domain.member.Member;
 import com.delver.board.domain.member.MemberRepository;
 import com.delver.board.domain.post.Post;
 import com.delver.board.domain.post.PostRepository;
+import com.delver.board.exception.PostException;
+import com.delver.board.exception.code.PostExceptionCode;
 import com.delver.board.web.constant.PostConst;
+import com.delver.board.web.controller.dto.PostResponseDto;
 import com.delver.board.web.controller.dto.PostSaveRequestDto;
 import com.delver.board.web.controller.dto.PostUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -29,13 +33,16 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public Post findById(Long postId) {
-        return postRepository.findById(postId);
+    public PostResponseDto findById(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostException(PostExceptionCode.POST_NOTFOUND));
+        return PostResponseDto.builder().post(post).build();
     }
-
     @Transactional(readOnly = true)
-    public List<Post> findPage(int page, int limit) {
-        return postRepository.findPage( (page - 1) * limit, limit);
+    public List<PostResponseDto> findPage(int page, int limit) {
+        return postRepository.findPage( (page - 1) * limit, limit).stream()
+                .map(PostResponseDto::new)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -46,13 +53,17 @@ public class PostService {
 
     @Transactional
     public void updatePost(Long postId, PostUpdateRequestDto dto) {
-        Post findPost = postRepository.findById(postId);
+        Post findPost = postRepository.findById(postId).orElseThrow(
+                () -> new PostException(PostExceptionCode.POST_NOTFOUND)
+        );
         findPost.update(dto.getTitle(), dto.getContent(), dto.getCategory());
     }
 
     @Transactional
     public void deletePost(Long postId) {
-        Post findPost = postRepository.findById(postId);
+        Post findPost = postRepository.findById(postId).orElseThrow(
+                () -> new PostException(PostExceptionCode.POST_NOTFOUND)
+        );
         postRepository.delete(findPost);
     }
 

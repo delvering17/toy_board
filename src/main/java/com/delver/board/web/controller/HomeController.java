@@ -1,10 +1,10 @@
 package com.delver.board.web.controller;
 
 import com.delver.board.domain.member.Member;
-import com.delver.board.domain.post.Post;
 import com.delver.board.service.PostService;
 import com.delver.board.web.constant.PostConst;
 import com.delver.board.web.constant.SessionConst;
+import com.delver.board.web.controller.dto.PostResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class HomeController {
                        Model model,
                        HttpServletRequest request) {
 
-        List<Post> postList = postService.findPage(page, PostConst.POST_LIMIT);
+        List<PostResponseDto> postList = postService.findPage(page, PostConst.POST_LIMIT);
         Long countPage = postService.countPage();
 
         model.addAttribute("postList", postList);

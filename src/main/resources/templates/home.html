@@ -37,7 +37,7 @@
             <td>
                 <a th:href="|/post/${post.id}?page=${page}|" th:text="${post.title}">제목</a>
             </td>
-            <td th:text="${post.member.userName}">작성자</td>
+            <td th:text="${post.username}">작성자</td>
             <td th:text="${post.createDate}">게시일</td>
         </tr>
         </tbody>
