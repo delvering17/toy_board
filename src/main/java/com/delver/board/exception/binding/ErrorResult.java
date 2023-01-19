@@ -4,14 +4,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.context.MessageSource;
 import org.springframework.validation.Errors;
-import org.springframework.validation.FieldError;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,5 +28,4 @@ public class ErrorResult {
                                 .build()
                 ).toList();
     }
-
 }
