@@ -1,8 +1,10 @@
 package com.delver.board.exception;
 
 import com.delver.board.exception.code.ExceptionCode;
+import lombok.Getter;
 
-public class CustomException extends RuntimeException {
+@Getter
+public abstract class CustomException extends RuntimeException {
 
     private final ExceptionCode exceptionCode;
 
