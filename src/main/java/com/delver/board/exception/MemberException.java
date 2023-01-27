@@ -4,12 +4,12 @@ import com.delver.board.exception.code.MemberExceptionCode;
 import lombok.Getter;
 
 @Getter
-public class MemberException extends RuntimeException {
+public class MemberException extends CustomException {
 
     private final MemberExceptionCode memberExceptionCode;
 
     public MemberException(MemberExceptionCode memberExceptionCode) {
-        super(memberExceptionCode.getMessage());
+        super(memberExceptionCode);
         this.memberExceptionCode = memberExceptionCode;
     }
 }
